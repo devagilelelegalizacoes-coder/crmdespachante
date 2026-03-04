@@ -1,0 +1,11 @@
+.git
+.gitignore
+.github
+Dockerfile
+nginx.conf
+README.md
+env.txt
+desktop.ini
+iniciar_servidor.bat
+dev_server.py
+github/
