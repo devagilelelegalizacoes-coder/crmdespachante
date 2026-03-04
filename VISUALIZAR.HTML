@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orçamento Digital - Agile Legalizações</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --azul-agile: #1a2d53;
+            --verde-sucesso: #28a745;
+            --bg-light: #f8f9fa;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            color: #333;
+        }
+
+        .invoice-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            border: none;
+            margin-top: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .invoice-header {
+            background-color: var(--azul-agile);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .invoice-header h1 {
+            font-weight: 900;
+            letter-spacing: -1px;
+            margin: 0;
+            font-size: 2.5rem;
+        }
+
+        .invoice-header p {
+            opacity: 0.8;
+            margin: 0;
+            text-transform: uppercase;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .status-badge {
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            display: inline-block;
+            margin-top: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .client-info {
+            padding: 2rem;
+            border-bottom: 1px solid #eee;
+            background: #fafafa;
+        }
+
+        .info-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #999;
+            text-transform: uppercase;
+            margin-bottom: 0.2rem;
+        }
+
+        .info-value {
+            font-weight: 600;
+            color: var(--azul-agile);
+        }
+
+        .table-custom {
+            margin: 0;
+        }
+
+        .table-custom th {
+            background: #f1f3f5;
+            color: #666;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            border: none;
+            padding: 1rem;
+        }
+
+        .table-custom td {
+            padding: 1.2rem 1rem;
+            vertical-align: middle;
+            border-bottom: 1px solid #f1f3f5;
+        }
+
+        .total-section {
+            padding: 2rem;
+            background-color: var(--azul-agile);
+            color: white;
+            border-radius: 0 0 20px 20px;
+        }
+
+        .payment-box {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 15px;
+            border: 2px dashed #ddd;
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .pix-btn {
+            background: #32bcad;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 800;
+            width: 100%;
+            margin-top: 1rem;
+            transition: 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .pix-btn:hover {
+            background: #28a396;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        @media (max-width: 768px) {
+            .invoice-header {
+                padding: 2rem 1rem;
+            }
+
+            .invoice-header h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="loading-screen" id="loader">
+        <div class="text-center">
+            <div class="spinner-border text-primary" role="status"></div>
+            <p class="mt-3 fw-bold text-muted">CARREGANDO ORÇAMENTO...</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10">
+                <div class="invoice-card shadow-lg" id="content" style="display:none;">
+                    <div class="invoice-header">
+                        <p>PROPOSTA DE SERVIÇOS</p>
+                        <h1>AGILE</h1>
+                        <p class="mb-2">LEGALIZAÇÕES</p>
+                        <div class="status-badge"><i class="fas fa-clock me-2"></i> AGUARDANDO PAGAMENTO</div>
+                    </div>
+
+                    <div class="client-info">
+                        <div class="row g-4">
+                            <div class="col-6 col-md-3">
+                                <div class="info-label">DATA</div>
+                                <div class="info-value" id="view-data">--/--/----</div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="info-label">CATEGORIA</div>
+                                <div class="info-value" id="view-categoria">-------</div>
+                            </div>
+                            <div class="col-6 col-md-2">
+                                <div class="info-label">PLACA / DOC</div>
+                                <div class="info-value text-primary" id="view-placa">-------</div>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <div class="info-label">CLIENTE</div>
+                                <div class="info-value" id="view-cliente">--- --- ---</div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="table-responsive">
+                        <table class="table table-custom">
+                            <thead>
+                                <tr>
+                                    <th>DESCRIÇÃO DO SERVIÇO</th>
+                                    <th class="text-center">QTD</th>
+                                    <th class="text-end">UNITÁRIO</th>
+                                    <th class="text-end">TOTAL</th>
+                                </tr>
+                            </thead>
+                            <tbody id="view-itens">
+                                <!-- Itens serão inseridos aqui -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="total-section">
+                        <div class="row align-items-center">
+                            <div class="col-6">
+                                <p class="mb-0 opacity-75 small fw-bold">VALOR FINAL</p>
+                                <h2 class="mb-0 fw-black" id="view-total">R$ 0,00</h2>
+                            </div>
+                            <div class="col-6 text-end">
+                                <i class="fas fa-shield-alt fa-2x opacity-25"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="px-4 pb-5">
+                        <div class="payment-box">
+                            <h6 class="fw-bold mb-3">PAGAMENTO INSTANTÂNEO (PIX)</h6>
+                            <p class="text-muted small">Efetue o pagamento via PIX para darmos início imediato ao seu
+                                processo.</p>
+
+                            <!-- Exemplo de Chave PIX - Usuário deve configurar -->
+                            <div class="bg-light p-3 rounded mb-3 border">
+                                <small class="text-muted d-block">CHAVE PIX CNPJ:</small>
+                                <strong class="fs-5">00.000.000/0001-00</strong>
+                            </div>
+
+                            <a href="#" class="pix-btn"
+                                onclick="alert('Funcionalidade de Copiar PIX será integrada aqui.')">
+                                <i class="fas fa-copy me-2"></i> COPIAR CHAVE PIX
+                            </a>
+
+                            <hr class="my-4">
+
+                            <p class="small text-muted mb-0">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Após o pagamento, o comprovante será identificado automaticamente pela nossa equipe.
+                            </p>
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <button class="btn btn-sm btn-outline-secondary border-0" onclick="window.print()">
+                                <i class="fas fa-print me-2"></i> BAIXAR EM PDF
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const SB_URL = 'https://bjkmaabneqnpemhudkzy.supabase.co';
+        const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJqa21hYWJuZXFucGVtaHVka3p5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE5Njg3NDQsImV4cCI6MjA4NzU0NDc0NH0.xL1mCJ0sN6xVdRahM3jTOQzYvDio_oCJLnDWv7nnmAM';
+        const sb = supabase.createClient(SB_URL, SB_KEY);
+
+        async function carregarOrcamento() {
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+
+            if (!id) {
+                document.body.innerHTML = '<div class="container mt-5 text-center"><h3>Orçamento não encontrado.</h3><p>Verifique o link enviado.</p></div>';
+                return;
+            }
+
+            try {
+                const { data, error } = await sb.from('historico_orcamentos').select('*').eq('id', id).single();
+
+                if (error || !data) throw new Error("Não encontrado");
+
+                document.getElementById('view-data').innerText = data.data_envio;
+                document.getElementById('view-categoria').innerText = data.categoria || 'GERAL';
+                document.getElementById('view-placa').innerText = data.placa;
+                document.getElementById('view-cliente').innerText = data.cliente;
+                document.getElementById('view-total').innerText = data.total;
+
+
+                const itensContainer = document.getElementById('view-itens');
+                itensContainer.innerHTML = '';
+
+                if (data.itens && Array.isArray(data.itens)) {
+                    data.itens.forEach(item => {
+                        const tr = document.createElement('tr');
+                        const q = parseFloat(item.qty) || 0;
+                        const v = parseFloat(item.val) || 0;
+                        const totalItem = (q * v).toFixed(2).replace('.', ',');
+                        tr.innerHTML = `
+                            <td><div class="fw-bold">${item.desc}</div></td>
+                            <td class="text-center">${q}</td>
+                            <td class="text-end">R$ ${v.toFixed(2).replace('.', ',')}</td>
+                            <td class="text-end fw-bold">R$ ${totalItem}</td>
+                        `;
+                        itensContainer.appendChild(tr);
+                    });
+                } else {
+                    itensContainer.innerHTML = '<tr><td colspan="4" class="text-center text-muted">Detalhes do serviço disponíveis via consultoria.</td></tr>';
+                }
+
+                document.getElementById('loader').style.display = 'none';
+                document.getElementById('content').style.display = 'block';
+
+            } catch (err) {
+                console.error(err);
+                document.body.innerHTML = '<div class="container mt-5 text-center"><h3>Erro ao carregar orçamento.</h3><p>O link pode estar expirado ou incorreto.</p></div>';
+            }
+        }
+
+        window.onload = carregarOrcamento;
+    </script>
+</body>
+
+</html>

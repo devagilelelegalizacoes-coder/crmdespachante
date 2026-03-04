@@ -1,0 +1,118 @@
+<div class="fade-in">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="fw-black m-0 text-gradient">GESTÃO DE PROCESSOS (KANBAN)</h4>
+        <button class="btn-premium btn-primary" onclick="TaskModule.openModal()">
+            <i class="fas fa-plus"></i> Novo Processo
+        </button>
+    </div>
+
+    <div class="row g-3 mb-4 filter-bar-crm p-3 bg-white mx-0 rounded shadow-sm border">
+        <div class="col-md-3">
+            <input type="text" class="form-control" id="search-task-text" placeholder="🔍 Buscar cliente, placa, CPF..."
+                onkeyup="TaskModule.loadTasks()">
+        </div>
+        <div class="col-md-3">
+            <select class="form-select" id="search-task-cat" onchange="TaskModule.loadTasks()">
+                <option value="">📁 TODAS CATEGORIAS</option>
+                <option value="VEICULOS">VEÍCULOS</option>
+                <option value="RECURSO">RECURSOS TRÂNSITO</option>
+                <option value="HABILITACAO">HABILITAÇÃO</option>
+                <option value="GERAL">OUTROS</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <button class="btn btn-light w-100 fw-bold border" onclick="TaskModule.loadTasks()"><i
+                    class="fas fa-sync"></i>
+                ATUALIZAR</button>
+        </div>
+    </div>
+
+    <div class="kanban-board">
+        <!-- EM ANALISE -->
+        <div class="kanban-col-crm">
+            <div class="col-head-crm">
+                <span>EM ANÁLISE</span>
+                <span class="badge rounded-pill bg-secondary" id="count-analise">0</span>
+            </div>
+            <div class="col-body-crm" id="kanban-analise" data-status="EM ANALISE"></div>
+        </div>
+
+        <!-- EM PREPARACAO -->
+        <div class="kanban-col-crm">
+            <div class="col-head-crm border-warning">
+                <span>PREPARAÇÃO</span>
+                <span class="badge rounded-pill bg-warning text-dark" id="count-preparacao">0</span>
+            </div>
+            <div class="col-body-crm" id="kanban-preparacao" data-status="EM PREPARACAO"></div>
+        </div>
+
+        <!-- CONCLUIDO -->
+        <div class="kanban-col-crm">
+            <div class="col-head-crm border-success">
+                <span>CONCLUÍDO</span>
+                <span class="badge rounded-pill bg-success" id="count-concluido">0</span>
+            </div>
+            <div class="col-body-crm" id="kanban-concluido" data-status="CONCLUIDO"></div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .kanban-board {
+        display: flex;
+        gap: 1.5rem;
+        height: calc(100vh - 200px);
+        overflow-x: auto;
+        padding-bottom: 1rem;
+    }
+
+    .kanban-col-crm {
+        flex: 1;
+        min-width: 320px;
+        background: #f1f5f9;
+        border-radius: 1rem;
+        display: flex;
+        flex-direction: column;
+        border: 1px solid var(--border);
+    }
+
+    .col-head-crm {
+        padding: 1.25rem;
+        font-weight: 800;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 4px solid var(--secondary);
+        border-radius: 1rem 1rem 0 0;
+        background: white;
+    }
+
+    .col-body-crm {
+        flex: 1;
+        padding: 1rem;
+        overflow-y: auto;
+        min-height: 100px;
+    }
+
+    .task-card-crm {
+        background: white;
+        padding: 1rem;
+        border-radius: 0.75rem;
+        margin-bottom: 1rem;
+        box-shadow: var(--shadow-sm);
+        border-left: 5px solid var(--secondary);
+        transition: transform 0.2s;
+        cursor: grab;
+    }
+
+    .task-card-crm:hover {
+        transform: scale(1.02);
+        box-shadow: var(--shadow-md);
+    }
+
+    .ghost {
+        opacity: 0.4;
+        background: var(--primary-light);
+        border: 2px dashed var(--primary);
+    }
+</style>

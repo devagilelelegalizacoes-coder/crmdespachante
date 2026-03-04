@@ -1,0 +1,87 @@
+<div class="fade-in">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="fw-black m-0 text-gradient">CONFIGURAÇÕES DO SISTEMA</h4>
+    </div>
+
+    <div class="row g-4">
+        <!-- Tabela de Preços -->
+        <div class="col-md-12">
+            <div class="card-premium mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="fw-bold m-0 text-primary"><i class="fas fa-tags me-2"></i>TABELA DE PREÇOS BASE
+                        (SERVIÇOS)</h6>
+                    <button class="btn btn-sm btn-primary" onclick="ConfigModule.addPriceLine()">+ NOVO SERVIÇO</button>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover" id="table-config-precos">
+                        <thead class="table-light">
+                            <tr>
+                                <th>CATEGORIA</th>
+                                <th>DESCRIÇÃO DO SERVIÇO</th>
+                                <th width="150">VALOR BASE</th>
+                                <th width="120">DESC. MÁX (%)</th>
+                                <th width="150">VALOR FINAL</th>
+                                <th width="50"></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <button class="btn btn-success btn-sm w-100 mt-3" onclick="ConfigModule.savePrices()">💾 SALVAR TABELA
+                    DE SERVIÇOS</button>
+            </div>
+        </div>
+
+
+        <!-- Tabela de DUDAS -->
+        <div class="col-md-12">
+            <div class="card-premium">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="fw-bold m-0 text-dark"><i class="fas fa-barcode me-2"></i>VALORES DE DUDAS 2026</h6>
+                    <button class="btn btn-sm btn-dark" onclick="ConfigModule.addDudaLine()">+ NOVO DUDA</button>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover" id="table-config-dudas">
+                        <thead class="table-light">
+                            <tr>
+                                <th width="120">CÓDIGO</th>
+                                <th>DESCRIÇÃO</th>
+                                <th width="150">VALOR (R$)</th>
+                                <th width="50"></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <button class="btn btn-dark btn-sm w-100 mt-3" onclick="ConfigModule.saveDudas()">💾 SALVAR VALORES DE
+                    DUDAS</button>
+            </div>
+            <!-- Gerenciamento de Links Rápidos -->
+            <div class="col-md-12">
+                <div class="card-premium mt-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6 class="fw-bold m-0 text-info"><i class="fas fa-link me-2"></i>GERENCIAMENTO DE LINKS RÁPIDOS
+                        </h6>
+                        <button class="btn btn-sm btn-info text-white" onclick="ConfigModule.addLinkLine()">+ NOVO
+                            LINK</button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover" id="table-config-links">
+                            <thead class="table-light">
+                                <tr>
+                                    <th width="250">TÍTULO (NOME)</th>
+                                    <th>URL (LINK)</th>
+                                    <th width="150">ÍCONE</th>
+                                    <th width="150">CATEGORIA</th>
+                                    <th width="50"></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <button class="btn btn-info text-white btn-sm w-100 mt-3" onclick="ConfigModule.saveLinks()">💾
+                        SALVAR LINKS RÁPIDOS</button>
+                </div>
+            </div>
+        </div>
+    </div>

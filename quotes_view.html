@@ -1,0 +1,201 @@
+<div class="fade-in">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="fw-black m-0 text-gradient">GESTOR DE ORÇAMENTOS</h4>
+        <div class="d-flex gap-2">
+            <button class="btn-premium btn-primary" onclick="QuoteModule.saveAndSend()">
+                <i class="fas fa-paper-plane"></i> SALVAR E COPIAR
+            </button>
+            <button class="btn-premium btn-secondary" onclick="window.print()">
+                <i class="fas fa-print"></i> PDF
+            </button>
+        </div>
+    </div>
+
+    <!-- Payment Link Alert -->
+    <div class="alert alert-primary d-none mb-4 shadow-sm" id="quote-link-alert">
+        <div class="d-flex align-items-center justify-content-between">
+            <div>
+                <i class="fas fa-link me-2"></i> <strong>LINK PÚBLICO GERADO:</strong>
+                <span id="public-share-link" class="ms-2 font-monospace small"></span>
+            </div>
+            <button class="btn btn-sm btn-primary" onclick="QuoteModule.copyPublicLink()">Copiar</button>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Editor Column -->
+        <div class="col-lg-12">
+            <div class="card-premium" id="printable-quote-area" style="background: white;">
+                <div class="p-4">
+                    <div class="row mb-5 align-items-center">
+                        <div class="col-md-6">
+                            <h1 style="color:var(--primary); font-weight:900; margin:0; line-height: 1;">AGILE</h1>
+                            <span class="fw-bold tracking-widest text-muted small">LEGALIZAÇÕES E PROCESSOS</span>
+                        </div>
+                        <div class="col-md-6 text-md-end mt-3 mt-md-0">
+                            <p class="mb-0 small fw-bold">ORÇAMENTO #<span id="q-number">---</span></p>
+                            <p class="mb-0 small text-muted">DATA: <span id="q-date">--/--/----</span></p>
+                            <input type="text" id="q-atendente" placeholder="NOME DO ATENDENTE"
+                                class="form-control-minimal text-md-end w-50 ms-auto">
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-6 border-end">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h6 class="text-primary fw-bold small"><i class="fas fa-id-card me-2"></i>IDENTIFICAÇÃO
+                                    DE PROCESSO</h6>
+                                <select id="q-categoria" class="form-select form-select-sm border-primary"
+                                    style="width: 150px; font-size: 10px; height: 25px;">
+                                    <option value="GERAL">CATEGORIA: GERAL</option>
+                                    <option value="VEICULOS">VEÍCULOS</option>
+                                    <option value="RECURSO">RECURSO TRÂNSITO</option>
+                                    <option value="HABILITACAO">HABILITAÇÃO</option>
+                                </select>
+                            </div>
+                            <div class="mb-2">
+                                <label class="info-label-crm">PLACA / DOC / CPF / CNH</label>
+                                <input type="text" id="q-placa" class="form-control-minimal q-input-main"
+                                    placeholder="IDENTIFICAÇÃO">
+                            </div>
+                            <div>
+                                <label class="info-label-crm">CLIENTE</label>
+                                <input type="text" id="q-cliente" class="form-control-minimal q-input-main"
+                                    placeholder="NOME DO CLIENTE">
+                            </div>
+                        </div>
+                        <div class="col-md-6 ps-md-4">
+                            <h6 class="text-primary fw-bold mb-3 small">RESUMO DO FINANCEIRO</h6>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted">SUBTOTAL</span>
+                                <span id="q-subtotal" class="fw-bold">R$ 0,00</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted">DESCONTO (%)</span>
+                                <input type="number" id="q-desconto" value="0" class="text-end fw-bold"
+                                    style="width: 60px; border:none; border-bottom:1px solid #ddd;"
+                                    oninput="QuoteModule.calculate()">
+                            </div>
+                            <div class="d-flex justify-content-between pt-2 border-top mt-2">
+                                <span class="fw-black text-primary">VALOR FINAL</span>
+                                <span id="q-total" class="fw-black fs-5 text-primary">R$ 0,00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-borderless">
+                            <thead>
+                                <tr class="bg-light">
+                                    <th width="50" class="text-center">#</th>
+                                    <th>DESCRIÇÃO DO SERVIÇO</th>
+                                    <th width="100" class="text-center">QTD</th>
+                                    <th width="150" class="text-end">VALOR UNITÁRIO</th>
+                                    <th width="50"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="q-items-body">
+                                <!-- Items via logic -->
+                            </tbody>
+                        </table>
+                        <datalist id="list-quote-servicos"></datalist>
+                        <button class="btn btn-sm btn-outline-primary mt-2" onclick="QuoteModule.addItemLine()">
+                            <i class="fas fa-plus"></i> Adicionar Item
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- History Collapsible -->
+    <div class="mt-4">
+        <button class="btn btn-light w-100 d-flex justify-content-between align-items-center py-3"
+            data-bs-toggle="collapse" data-bs-target="#historyCollapse">
+            <span class="fw-bold"><i class="fas fa-history me-2"></i> VER HISTÓRICO RECENTE</span>
+            <i class="fas fa-chevron-down"></i>
+        </button>
+        <div class="collapse mt-2" id="historyCollapse">
+            <div class="card-premium">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="m-0 fw-bold text-muted small"><i class="fas fa-filter me-1"></i> FILTRAR LISTA</h6>
+                    <select id="filter-quote-cat" class="form-select form-select-sm border-primary"
+                        style="width: 200px; font-size: 11px;" onchange="QuoteModule.loadHistory()">
+                        <option value="">CATEGORIA: TODAS</option>
+                        <option value="VEICULOS">VEÍCULOS</option>
+                        <option value="RECURSO">RECURSO TRÂNSITO</option>
+                        <option value="HABILITACAO">HABILITAÇÃO</option>
+                        <option value="GERAL">GERAL</option>
+                    </select>
+                </div>
+                <table class="table-premium">
+                    <thead>
+                        <tr>
+                            <th>DATA</th>
+                            <th>CATEGORIA</th>
+                            <th>PLACA</th>
+                            <th>CLIENTE</th>
+                            <th>VALOR</th>
+                            <th>AÇÕES</th>
+                        </tr>
+                    </thead>
+                    <tbody id="q-history-body">
+                        <!-- History data -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-control-minimal {
+        border: none;
+        border-bottom: 2px solid transparent;
+        border-radius: 0;
+        padding: 0.5rem 0;
+        transition: all 0.3s;
+        outline: none;
+        background: transparent;
+    }
+
+    .form-control-minimal:focus {
+        border-bottom-color: var(--primary);
+    }
+
+    .q-input-main {
+        font-size: 1.1rem;
+        font-weight: 700;
+        width: 100%;
+        text-transform: uppercase;
+    }
+
+    .info-label-crm {
+        font-size: 0.65rem;
+        font-weight: 800;
+        color: #94a3b8;
+        display: block;
+        margin-bottom: -5px;
+    }
+
+    @media print {
+
+        .crm-sidebar,
+        .crm-header,
+        .no-print,
+        .btn-premium,
+        .alert {
+            display: none !important;
+        }
+
+        .crm-content {
+            padding: 0 !important;
+        }
+
+        #printable-quote-area {
+            border: none !important;
+            box-shadow: none !important;
+            width: 210mm;
+        }
+    }
+</style>

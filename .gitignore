@@ -1,0 +1,24 @@
+# Google Drive files
+desktop.ini
+
+# Environment variables and secrets
+env.txt
+.env
+*.local
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Docker
+docker-compose.override.yml

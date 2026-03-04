@@ -1,0 +1,117 @@
+<div class="fade-in">
+    <div class="row g-4 mb-4">
+        <!-- Stats Support -->
+        <div class="col-md-3">
+            <div class="card-premium">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <p class="text-muted small fw-bold mb-1">VENDAS (MÊS)</p>
+                        <h3 class="fw-black mb-0" id="stat-vendas-total">R$ 0,00</h3>
+                    </div>
+                    <div class="text-primary bg-primary bg-opacity-10 p-3 rounded-circle"
+                        style="width: 50px; height: 50px;">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                </div>
+                <div class="mt-2 small text-success">
+                    <i class="fas fa-arrow-up"></i> 12% desde ontem
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card-premium">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <p class="text-muted small fw-bold mb-1">PROCESSOS ATIVOS</p>
+                        <h3 class="fw-black mb-0" id="stat-tasks-count">0</h3>
+                    </div>
+                    <div class="text-warning bg-warning bg-opacity-10 p-3 rounded-circle"
+                        style="width: 50px; height: 50px;">
+                        <i class="fas fa-folder"></i>
+                    </div>
+                </div>
+                <div class="mt-2 small text-muted">
+                    Gestão Kanban
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card-premium">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <p class="text-muted small fw-bold mb-1">ORÇAMENTOS EM ABERTO</p>
+                        <h3 class="fw-black mb-0" id="stat-quotes-count">0</h3>
+                    </div>
+                    <div class="text-info bg-info bg-opacity-10 p-3 rounded-circle" style="width: 50px; height: 50px;">
+                        <i class="fas fa-file-invoice"></i>
+                    </div>
+                </div>
+                <div class="mt-2 small text-muted">
+                    Conversão pendente
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card-premium">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <p class="text-muted small fw-bold mb-1">DUDAS 2026</p>
+                        <h3 class="fw-black mb-0">R$ 209,78</h3>
+                    </div>
+                    <div class="text-danger bg-danger bg-opacity-10 p-3 rounded-circle"
+                        style="width: 50px; height: 50px;">
+                        <i class="fas fa-landmark"></i>
+                    </div>
+                </div>
+                <div class="mt-2 small text-muted">
+                    Valor TP (Cód 014-0)
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Secondary Row -->
+    <div class="row g-4">
+        <div class="col-md-8">
+            <div class="card-premium h-100">
+                <h6 class="fw-bold mb-4 border-bottom pb-2">ATIVIDADES RECENTES</h6>
+                <div class="table-responsive">
+                    <table class="table-premium">
+                        <thead>
+                            <tr>
+                                <th>DATA</th>
+                                <th>CLIENTE</th>
+                                <th>SERVIÇO</th>
+                                <th>VALOR</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dash-recent-table">
+                            <!-- Populated via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card-premium h-100">
+                <h6 class="fw-bold mb-4 border-bottom pb-2">LINKS RÁPIDOS</h6>
+                <div class="d-grid gap-2">
+                    <a href="https://www2.detran.rj.gov.br" target="_blank" class="btn btn-light text-start py-3">
+                        <i class="fas fa-external-link-alt me-2 text-primary"></i> Portal Detran RJ
+                    </a>
+                    <a href="https://portalservicos.senatran.serpro.gov.br/" target="_blank"
+                        class="btn btn-light text-start py-3">
+                        <i class="fas fa-globe me-2 text-info"></i> Portal SENATRAN
+                    </a>
+                    <a href="#" class="btn btn-light text-start py-3" onclick="CRM.switchTab('quotes')">
+                        <i class="fas fa-plus-circle me-2 text-success"></i> Novo Orçamento
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
