@@ -2,7 +2,6 @@
 .gitignore
 .github
 Dockerfile
-nginx.conf
 README.md
 env.txt
 desktop.ini
