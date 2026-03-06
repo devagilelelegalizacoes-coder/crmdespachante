@@ -6,15 +6,17 @@ const ConfigModule = (function () {
     async function init() {
         CRM.showLoader(true);
         try {
-            const [prices, dudas, links] = await Promise.all([
+            const [prices, dudas, links, payments] = await Promise.all([
                 Database.select('config_precos'),
                 Database.select('config_dudas'),
-                Database.select('config_links')
+                Database.select('config_links'),
+                Database.select('config_pagamentos')
             ]);
 
             renderPrices(prices);
             renderDudas(dudas);
             renderLinks(links);
+            renderPayments(payments[0] || {});
         } catch (e) { console.error(e); }
         CRM.showLoader(false);
     }
@@ -147,5 +149,30 @@ const ConfigModule = (function () {
         CRM.showLoader(false);
     }
 
-    return { init, addPriceLine, addDudaLine, addLinkLine, savePrices, saveDudas, saveLinks };
+    function renderPayments(p) {
+        document.getElementById('config-pix-key').value = p.chave_pix || '';
+        document.getElementById('config-pix-name').value = p.pix_nome || '';
+        document.getElementById('config-mp-public').value = p.mp_public_key || '';
+        document.getElementById('config-mp-token').value = p.mp_access_token || '';
+    }
+
+    async function savePaymentConfig() {
+        CRM.showLoader(true);
+        const payload = {
+            chave_pix: document.getElementById('config-pix-key').value,
+            pix_nome: document.getElementById('config-pix-name').value,
+            mp_public_key: document.getElementById('config-mp-public').value,
+            mp_access_token: document.getElementById('config-mp-token').value
+        };
+
+        try {
+            // Delete old config (assuming only one row)
+            await Database.client.from('config_pagamentos').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+            await Database.insert('config_pagamentos', payload);
+            CRM.notify("Configurações de Pagamento salvas!");
+        } catch (e) { alert(e.message); }
+        CRM.showLoader(false);
+    }
+
+    return { init, addPriceLine, addDudaLine, addLinkLine, savePrices, saveDudas, saveLinks, savePaymentConfig };
 })();

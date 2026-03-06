@@ -111,7 +111,10 @@
         <!-- Main Body -->
         <main class="crm-main">
             <header class="crm-header">
-                <div class="d-flex align-items-center">
+                <div class="d-flex align-items-center gap-3">
+                    <button class="btn btn-light d-lg-none" id="mobile-menu-toggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
                     <h5 class="m-0 fw-bold" id="current-view-title text-gradient">Bem-vindo, Gestor</h5>
                 </div>
 
@@ -309,6 +312,32 @@
     <script>
         document.getElementById('system-date').innerText = new Date().toLocaleDateString('pt-br', {
             day: '2-digit', month: 'long', year: 'numeric'
+        });
+
+        // Mobile Menu Toggle
+        document.getElementById('mobile-menu-toggle')?.addEventListener('click', () => {
+            document.querySelector('.crm-sidebar').classList.toggle('active');
+            const overlay = document.createElement('div');
+            overlay.className = 'sidebar-overlay';
+            if (document.querySelector('.crm-sidebar').classList.contains('active')) {
+                document.body.appendChild(overlay);
+                overlay.addEventListener('click', () => {
+                    document.querySelector('.crm-sidebar').classList.remove('active');
+                    overlay.remove();
+                });
+            } else {
+                document.querySelector('.sidebar-overlay')?.remove();
+            }
+        });
+
+        // Close sidebar when clicking nav-item (on mobile)
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                if (window.innerWidth < 992) {
+                    document.querySelector('.crm-sidebar').classList.remove('active');
+                    document.querySelector('.sidebar-overlay')?.remove();
+                }
+            });
         });
     </script>
 </body>

@@ -108,6 +108,7 @@ const QuoteModule = (function () {
                 categoria: document.getElementById('q-categoria').value,
                 total: document.getElementById('q-total').innerText,
                 itens: items,
+                pix_custom: document.getElementById('q-pix-custom').value,
                 data_envio: new Date().toLocaleString('pt-br')
             };
 

@@ -140,6 +140,18 @@ body {
     background: var(--background);
 }
 
+/* Força responsividade em todas as tabelas dentro do CRM */
+.table-responsive,
+table {
+    max-width: 100%;
+}
+
+@media (max-width: 768px) {
+    .crm-content {
+        padding: 1rem;
+    }
+}
+
 /* Cards & Components */
 .card-premium {
     background: var(--surface);
@@ -268,4 +280,121 @@ textarea:not(.no-uppercase),
 
 ::placeholder {
     text-transform: uppercase;
+}
+
+/* --- RESPONSIVIDADE --- */
+
+/* Ajustes Gerais de Tablet/Celular */
+@media (max-width: 1024px) {
+    .crm-header {
+        padding: 0 1rem;
+    }
+
+    .crm-content {
+        padding: 1.5rem;
+    }
+}
+
+/* Mobile Layout (< 992px) */
+@media (max-width: 991px) {
+    .crm-sidebar {
+        position: fixed;
+        left: -var(--sidebar-width);
+        top: 0;
+        bottom: 0;
+        z-index: 2000;
+        box-shadow: 15px 0 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .crm-sidebar.active {
+        left: 0;
+    }
+
+    .sidebar-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1999;
+        backdrop-filter: blur(2px);
+    }
+
+    .crm-main {
+        width: 100%;
+    }
+
+    #current-view-title {
+        font-size: 1rem;
+    }
+
+    #system-date {
+        display: none;
+    }
+
+    .crm-content {
+        padding: 1rem;
+    }
+
+    /* Cards em Mobile */
+    .card-premium {
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    /* Tabelas em Mobile - Scroll horizontal simples */
+    .table-responsive {
+        border-radius: 0.5rem;
+        margin-bottom: 1rem;
+    }
+}
+
+/* Telas muito pequenas (Celulares) */
+@media (max-width: 576px) {
+    .crm-header {
+        height: 60px;
+    }
+
+    .logo-text {
+        font-size: 1.2rem;
+    }
+
+    .nav-item {
+        padding: 0.6rem 0.75rem;
+    }
+
+    /* Modais Full Screen no Mobile */
+    .modal-dialog {
+        margin: 0;
+        max-width: 100% !important;
+        height: 100%;
+    }
+
+    .modal-content {
+        height: 100%;
+        border-radius: 0;
+    }
+
+    .btn-premium {
+        width: 100%;
+        justify-content: center;
+    }
+
+    #user-email-header {
+        max-width: 120px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+/* Ajustes Finos para Elementos Específicos */
+.img-fluid-custom {
+    max-width: 100%;
+    height: auto;
+}
+
+[data-tab="quotes"] .row .col-lg-12 {
+    overflow-x: auto;
 }
