@@ -146,7 +146,7 @@ const QuoteModule = (function () {
     async function loadHistory() {
         try {
             const filterCat = document.getElementById('filter-quote-cat')?.value || '';
-            const searchVal = document.getElementById('filter-quote-search')?.value.toUpperCase() || '';
+            const searchVal = document.getElementById('filter-quote-search')?.value?.toUpperCase() || '';
             let query = Database.client.from('historico_orcamentos').select('id, data_envio, placa, cliente, total, categoria');
 
             if (filterCat) {
