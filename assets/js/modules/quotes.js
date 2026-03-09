@@ -146,10 +146,14 @@ const QuoteModule = (function () {
     async function loadHistory() {
         try {
             const filterCat = document.getElementById('filter-quote-cat')?.value || '';
+            const searchVal = document.getElementById('filter-quote-search')?.value.toUpperCase() || '';
             let query = Database.client.from('historico_orcamentos').select('id, data_envio, placa, cliente, total, categoria');
 
             if (filterCat) {
                 query = query.eq('categoria', filterCat);
+            }
+            if (searchVal) {
+                query = query.or(`cliente.ilike.%${searchVal}%,placa.ilike.%${searchVal}%`);
             }
 
             const { data, error } = await query;

@@ -124,14 +124,19 @@
             <div class="card-premium">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h6 class="m-0 fw-bold text-muted small"><i class="fas fa-filter me-1"></i> FILTRAR LISTA</h6>
-                    <select id="filter-quote-cat" class="form-select form-select-sm border-primary"
-                        style="width: 200px; font-size: 11px;" onchange="QuoteModule.loadHistory()">
-                        <option value="">CATEGORIA: TODAS</option>
-                        <option value="VEICULOS">VEÍCULOS</option>
-                        <option value="RECURSO">RECURSO TRÂNSITO</option>
-                        <option value="HABILITACAO">HABILITAÇÃO</option>
-                        <option value="GERAL">GERAL</option>
-                    </select>
+                    <div class="d-flex gap-2">
+                        <input type="text" id="filter-quote-search" class="form-control form-control-sm border-primary"
+                            placeholder="Buscar Cliente ou Placa..." style="font-size: 11px;"
+                            oninput="QuoteModule.loadHistory()">
+                        <select id="filter-quote-cat" class="form-select form-select-sm border-primary"
+                            style="width: 150px; font-size: 11px;" onchange="QuoteModule.loadHistory()">
+                            <option value="">CATEGORIA: TODAS</option>
+                            <option value="VEICULOS">VEÍCULOS</option>
+                            <option value="RECURSO">RECURSO TRÂNSITO</option>
+                            <option value="HABILITACAO">HABILITAÇÃO</option>
+                            <option value="GERAL">GERAL</option>
+                        </select>
+                    </div>
                 </div>
                 <table class="table-premium">
                     <thead>
