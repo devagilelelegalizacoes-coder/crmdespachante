@@ -153,7 +153,6 @@ const ConfigModule = (function () {
         document.getElementById('config-pix-key').value = p.chave_pix || '';
         document.getElementById('config-pix-name').value = p.pix_nome || '';
         document.getElementById('config-mp-public').value = p.mp_public_key || '';
-        document.getElementById('config-mp-token').value = p.mp_access_token || '';
         document.getElementById('config-mp-fee').value = p.mp_fee || '0';
     }
 
@@ -163,7 +162,6 @@ const ConfigModule = (function () {
             chave_pix: document.getElementById('config-pix-key').value,
             pix_nome: document.getElementById('config-pix-name').value,
             mp_public_key: document.getElementById('config-mp-public').value,
-            mp_access_token: document.getElementById('config-mp-token').value,
             mp_fee: parseFloat(document.getElementById('config-mp-fee').value) || 0
         };
 

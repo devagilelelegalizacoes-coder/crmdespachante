@@ -320,17 +320,16 @@
                     itensContainer.innerHTML = '<tr><td colspan="4" class="text-center text-muted">Detalhes do serviço disponíveis via consultoria.</td></tr>';
                 }
 
-                // Carrega Configurações de Pagamento
-                const { data: configPay } = await sb.from('config_pagamentos').select('*').limit(1).maybeSingle();
+                // Carrega Configurações de Pagamento (sem expor o Access Token!)
+                const { data: configPay } = await sb.from('config_pagamentos').select('chave_pix, pix_nome, mp_public_key, mp_fee').limit(1).maybeSingle();
                 if (configPay) {
                     const finalPix = data.pix_custom || configPay.chave_pix || 'Chave não configurada';
                     document.getElementById('pix-key-display').innerText = finalPix;
                     document.getElementById('pix-name-display').innerText = data.pix_custom ? 'PIX INDIVIDUAL' : (configPay.pix_nome || '');
 
-                    // Mostra o Mercado Pago se houver Public Key OU Access Token configurado
-                    if (configPay.mp_public_key || configPay.mp_access_token) {
-                        initMercadoPago(configPay.mp_public_key, data);
-                    }
+                    // Na nova arquitetura de Edge Function, consideramos que o Mercado Pago está ativo
+                    // se houver a configuração de pagamentos definida (o Access Token não é mais verificado no front)
+                    initMercadoPago(configPay.mp_public_key, data);
                 }
 
                 document.getElementById('loader').style.display = 'none';
