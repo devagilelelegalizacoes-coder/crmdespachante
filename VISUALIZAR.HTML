@@ -326,7 +326,9 @@
                     const finalPix = data.pix_custom || configPay.chave_pix || 'Chave não configurada';
                     document.getElementById('pix-key-display').innerText = finalPix;
                     document.getElementById('pix-name-display').innerText = data.pix_custom ? 'PIX INDIVIDUAL' : (configPay.pix_nome || '');
-                    if (configPay.mp_public_key) {
+
+                    // Mostra o Mercado Pago se houver Public Key OU Access Token configurado
+                    if (configPay.mp_public_key || configPay.mp_access_token) {
                         initMercadoPago(configPay.mp_public_key, data);
                     }
                 }
