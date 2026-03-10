@@ -86,29 +86,43 @@
                 <div class="col-md-12">
                     <div class="card-premium mt-4">
                         <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h6 class="fw-bold m-0 text-success"><i class="fas fa-hand-holding-usd me-2"></i>CONFIGURAÇÕES DE PAGAMENTO</h6>
+                            <h6 class="fw-bold m-0 text-success"><i
+                                    class="fas fa-hand-holding-usd me-2"></i>CONFIGURAÇÕES DE PAGAMENTO</h6>
                         </div>
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="info-label-crm">CHAVE PIX (CNPJ, Celular, E-mail ou Aleatória)</label>
-                                <input type="text" id="config-pix-key" class="form-control" placeholder="Ex: 00.000.000/0001-00">
+                                <input type="text" id="config-pix-key" class="form-control"
+                                    placeholder="Ex: 00.000.000/0001-00">
                             </div>
                             <div class="col-md-6">
                                 <label class="info-label-crm">NOME DO TITULAR (PIX)</label>
-                                <input type="text" id="config-pix-name" class="form-control" placeholder="Agile Legalizações LTDA">
+                                <input type="text" id="config-pix-name" class="form-control"
+                                    placeholder="Agile Legalizações LTDA">
                             </div>
                             <div class="col-md-6 border-top pt-3">
                                 <label class="info-label-crm">MERCADO PAGO - PUBLIC KEY</label>
                                 <input type="text" id="config-mp-public" class="form-control" placeholder="APP_USR-...">
-                                <small class="text-muted" style="font-size: 10px;">Usado para o checkout no navegador.</small>
+                                <small class="text-muted" style="font-size: 10px;">Usado para o checkout no
+                                    navegador.</small>
                             </div>
                             <div class="col-md-6 border-top pt-3">
                                 <label class="info-label-crm">MERCADO PAGO - ACCESS TOKEN</label>
-                                <input type="password" id="config-mp-token" class="form-control" placeholder="APP_USR-...">
-                                <small class="text-muted" style="font-size: 10px;">Usado para gerar cobranças (Mantenha em sigilo).</small>
+                                <input type="password" id="config-mp-token" class="form-control"
+                                    placeholder="APP_USR-...">
+                                <small class="text-muted" style="font-size: 10px;">Usado para gerar cobranças (Mantenha
+                                    em sigilo).</small>
+                            </div>
+                            <div class="col-md-12 border-top pt-3">
+                                <label class="info-label-crm">TAXA DE REPASSE (INTERMEDIAÇÃO %)</label>
+                                <input type="number" id="config-mp-fee" class="form-control" placeholder="Ex: 4.99"
+                                    step="0.01">
+                                <small class="text-muted" style="font-size: 10px;">Porcentagem que será somada ao valor
+                                    final para cobrir a taxa do Mercado Pago.</small>
                             </div>
                         </div>
-                        <button class="btn btn-success btn-sm w-100 mt-4" onclick="ConfigModule.savePaymentConfig()">💾 SALVAR CONFIGURAÇÕES DE PAGAMENTO</button>
+                        <button class="btn btn-success btn-sm w-100 mt-4" onclick="ConfigModule.savePaymentConfig()">💾
+                            SALVAR CONFIGURAÇÕES DE PAGAMENTO</button>
                     </div>
                 </div>
             </div>
