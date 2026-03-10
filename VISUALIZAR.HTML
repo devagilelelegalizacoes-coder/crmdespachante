@@ -434,8 +434,9 @@
                 }
 
             } catch (err) {
-                console.error(err);
-                alert("Erro ao conectar ao Mercado Pago (Seguro):\n" + err.message);
+                console.error("ERRO DETALHADO:", err);
+                const msg = err.message || "Erro desconhecido";
+                alert("Erro ao conectar ao Mercado Pago:\n" + msg + "\n\nVerifique se o MP_ACCESS_TOKEN está configurado no Supabase.");
                 btn.innerHTML = originalText;
                 btn.disabled = false;
             }
@@ -478,8 +479,9 @@
                 }
 
             } catch (err) {
-                console.error(err);
-                alert("Erro ao conectar ao Mercado Pago (Seguro):\n" + err.message);
+                console.error("ERRO DETALHADO:", err);
+                const msg = err.message || "Erro desconhecido";
+                alert("Erro ao conectar ao Mercado Pago:\n" + msg + "\n\nVerifique se o MP_ACCESS_TOKEN está configurado no Supabase.");
                 btn.innerHTML = originalText;
                 btn.disabled = false;
             }
