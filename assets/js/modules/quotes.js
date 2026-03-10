@@ -147,7 +147,10 @@ const QuoteModule = (function () {
         try {
             const filterCat = document.getElementById('filter-quote-cat')?.value || '';
             const searchVal = document.getElementById('filter-quote-search')?.value?.toUpperCase() || '';
-            let query = Database.client.from('historico_orcamentos').select('id, data_envio, placa, cliente, total, categoria');
+            let query = Database.client.from('historico_orcamentos')
+                .select('id, data_envio, placa, cliente, total, categoria')
+                .order('created_at', { ascending: false })
+                .limit(20);
 
             if (filterCat) {
                 query = query.eq('categoria', filterCat);
@@ -159,12 +162,10 @@ const QuoteModule = (function () {
             const { data, error } = await query;
             if (error) throw error;
 
-            const sorted = data.sort((a, b) => b.id > a.id ? 1 : -1).slice(0, 15);
-
             const tbody = document.getElementById('q-history-body');
             if (!tbody) return;
 
-            tbody.innerHTML = sorted.map(h => {
+            tbody.innerHTML = data.map(h => {
                 let badgeColor = '#64748b';
                 if (h.categoria === 'VEICULOS') badgeColor = '#2563eb';
                 if (h.categoria === 'RECURSO') badgeColor = '#f59e0b';
