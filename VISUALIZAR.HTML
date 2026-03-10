@@ -404,7 +404,8 @@
 
                 // CHAMADA SEGURA VIA EDGE FUNCTION (Endpoint Swift)
                 const { data, error } = await sb.functions.invoke('swift-endpoint', {
-                    body: payload
+                    body: payload,
+                    headers: { "x-anon-key": sb.supabaseKey } // Garante envio da chave pública
                 });
 
                 if (error) throw error;
