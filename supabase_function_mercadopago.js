@@ -7,26 +7,22 @@ const corsHeaders = {
 }
 
 serve(async (req) => {
-    // CORS Handshake
-    if (req.method === 'OPTIONS') {
-        return new Response('ok', { headers: corsHeaders })
-    }
+    if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders })
 
     try {
         const MP_ACCESS_TOKEN = Deno.env.get("MP_ACCESS_TOKEN");
-
-        // Lê o corpo da requisição com erro tratado
-        const bodyText = await req.text();
-        if (!bodyText) throw new Error("Corpo da requisição vazio");
-
-        const { action, orcamentoId, valorTotal, description } = JSON.parse(bodyText);
+        console.log("--- NOVA REQUISIÇÃO RECEBIDA ---");
 
         if (!MP_ACCESS_TOKEN) {
-            return new Response(JSON.stringify({ error: "Token MP não configurado no Supabase" }), {
+            console.error("[CRÍTICO] MP_ACCESS_TOKEN não encontrado nos Secrets!");
+            return new Response(JSON.stringify({ error: "Configuração de Token ausente no Supabase." }), {
                 headers: { ...corsHeaders, 'Content-Type': 'application/json' },
                 status: 400
             });
         }
+
+        const { action, orcamentoId, valorTotal, description } = await req.json();
+        console.log(`Dados Extraídos: Ação=${action}, Valor=${valorTotal}, ID=${orcamentoId}`);
 
         let endpoint = "https://api.mercadopago.com/v1/payments";
         let mpBody = {};
@@ -36,11 +32,7 @@ serve(async (req) => {
                 transaction_amount: Number(valorTotal),
                 description: description || "Pagamento Agile CRM",
                 payment_method_id: "pix",
-                payer: {
-                    email: "financeiro@agiledespachante.com.br",
-                    first_name: "Cliente",
-                    last_name: "Agile"
-                }
+                payer: { email: "financeiro@agiledespachante.com.br" }
             };
         } else {
             endpoint = "https://api.mercadopago.com/checkout/preferences";
@@ -50,11 +42,11 @@ serve(async (req) => {
                     quantity: 1,
                     unit_price: Number(valorTotal),
                     currency_id: "BRL"
-                }],
-                auto_return: "approved"
+                }]
             };
         }
 
+        console.log("Chamando Mercado Pago...");
         const mpRes = await fetch(endpoint, {
             method: 'POST',
             headers: {
@@ -65,15 +57,15 @@ serve(async (req) => {
         });
 
         const mpData = await mpRes.json();
+        console.log(`Resposta do Mercado Pago (Status ${mpRes.status}):`, JSON.stringify(mpData));
 
-        // Retorna a resposta do Mercado Pago exatamente como veio
         return new Response(JSON.stringify(mpData), {
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
             status: mpRes.status
         });
 
     } catch (error) {
-        console.error("ERRO:", error.message);
+        console.error("[ERRO NO CÓDIGO]:", error.message);
         return new Response(JSON.stringify({ error: error.message }), {
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
             status: 400
