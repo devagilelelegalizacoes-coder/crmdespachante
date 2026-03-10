@@ -485,9 +485,8 @@
                 if (data.id && data.init_point) {
                     await sb.from('historico_orcamentos').update({ pix_custom: "Pref MP_ID: " + data.id }).eq('id', orcamentoId);
 
-                    // Note: sandbox_init_point se estiver em teste
-                    const checkoutUrl = data.sandbox_init_point || data.init_point;
-                    window.location.href = checkoutUrl;
+                    // REDIRECIONAMENTO PARA PRODUÇÃO REAL
+                    window.location.href = data.init_point;
                 } else {
                     throw new Error(data.message || "Erro desconhecido ao gerar checkout.");
                 }
