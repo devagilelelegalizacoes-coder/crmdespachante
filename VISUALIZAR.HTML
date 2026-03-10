@@ -402,13 +402,19 @@
                     paymentMethodId: "pix"
                 };
 
-                // CHAMADA SEGURA VIA EDGE FUNCTION (Endpoint Swift)
-                const { data, error } = await sb.functions.invoke('swift-endpoint', {
-                    body: payload,
-                    headers: { "x-anon-key": sb.supabaseKey } // Garante envio da chave pública
+                // CHAMADA SEGURA VIA FETCH DIRETO (Bypassing common invoke issues)
+                const res = await fetch(`${sb.supabaseUrl}/functions/v1/swift-endpoint`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'apikey': sb.supabaseKey,
+                        'Authorization': `Bearer ${sb.supabaseKey}`
+                    },
+                    body: JSON.stringify(payload)
                 });
 
-                if (error) throw error;
+                if (!res.ok) throw new Error("Erro na função: " + res.status);
+                const data = await res.json();
 
                 if (data.id && data.point_of_interaction) {
                     const qrCode = data.point_of_interaction.transaction_data.qr_code;
@@ -463,11 +469,18 @@
                     description: "Agile Legalizações - Pedido " + orcamentoId.substring(0, 5)
                 };
 
-                const { data, error } = await sb.functions.invoke('swift-endpoint', {
-                    body: payload
+                const res = await fetch(`${sb.supabaseUrl}/functions/v1/swift-endpoint`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'apikey': sb.supabaseKey,
+                        'Authorization': `Bearer ${sb.supabaseKey}`
+                    },
+                    body: JSON.stringify(payload)
                 });
 
-                if (error) throw error;
+                if (!res.ok) throw new Error("Erro na função: " + res.status);
+                const data = await res.json();
 
                 if (data.id && data.init_point) {
                     await sb.from('historico_orcamentos').update({ pix_custom: "Pref MP_ID: " + data.id }).eq('id', orcamentoId);
