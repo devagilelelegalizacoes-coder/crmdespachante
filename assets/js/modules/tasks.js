@@ -199,9 +199,10 @@ const TaskModule = (function () {
             setVal('f_extra', t.identificador_extra || '');
             setVal('f_cpf', t.cpf_proprietario);
             setVal('f_servico', t.tipo_servico);
-            setVal('f_tel', t.cliente_tel || '');
+            setVal('f_tel', t.client_tel || '');
             setVal('f_link', t.links || '');
             setVal('f_obs', t.observacoes || '');
+            setVal('f_status_manual', t.status || 'EM ANALISE');
 
             const delBtn = document.getElementById('btnDelTask');
             if (delBtn) delBtn.style.display = 'block';
@@ -211,25 +212,24 @@ const TaskModule = (function () {
             currentTaskExigencias = Array.isArray(t.exigencias) ? t.exigencias : [];
 
             renderUtils();
-            checkLinkedQuotes(t.placa_veiculo || t.cpf_proprietario);
+            checkLinkedQuotes(t.placa_veiculo || t.cpf_proprietario, t.id);
 
             const modalEl = document.getElementById('taskModal');
             if (modalEl) bootstrap.Modal.getOrCreateInstance(modalEl).show();
         } catch (err) { console.error(err); }
     }
 
-    async function checkLinkedQuotes(val) {
+    async function checkLinkedQuotes(val, taskId) {
         const listEl = document.getElementById('linked-quotes-list');
         if (!listEl || !val || val.length < 3) return;
 
         try {
-            // Busca orçamentos salvos que contenham a placa ou CPF
+            // Busca orçamentos vinculados (Placa ou CPF)
             const { data, error } = await Database.client
                 .from('historico_orcamentos')
                 .select('*')
-                .or(`placa.ilike.%${val}%,cpf_cnpj.ilike.%${val}%`)
-                .order('created_at', { ascending: false })
-                .limit(5);
+                .or(`placa.ilike.%${val}%,cliente.ilike.%${val}%`)
+                .order('created_at', { ascending: false });
 
             if (error) throw error;
 
@@ -238,16 +238,35 @@ const TaskModule = (function () {
                 return;
             }
 
-            listEl.innerHTML = data.map(q => `
-                <div class="d-flex justify-content-between align-items-center p-2 mb-1 bg-white border rounded shadow-sm">
+            // Mapeia orçamentos e destaca os pagos
+            listEl.innerHTML = data.map(q => {
+                const isPaid = q.pix_custom && q.pix_custom.includes('CONCLUÍDO');
+                return `
+                <div class="d-flex justify-content-between align-items-center p-2 mb-1 bg-white border rounded shadow-sm ${isPaid ? 'border-success' : ''}" style="${isPaid ? 'border-left: 4px solid #10b981 !important;' : ''}">
                     <div>
-                        <div class="fw-bold text-success" style="font-size: 11px;">#${q.id.substring(0, 6)} - R$ ${q.total?.toFixed(2)}</div>
-                        <div class="text-muted" style="font-size: 9px;">${new Date(q.created_at).toLocaleDateString()}</div>
+                        <div class="fw-bold ${isPaid ? 'text-success' : 'text-primary'}" style="font-size: 11px;">
+                            ${isPaid ? '<i class="fas fa-check-circle me-1"></i>PAGO' : '#' + q.id.substring(0, 6)} - R$ ${q.total}
+                        </div>
+                        <div class="text-muted" style="font-size: 9px;">${q.data_envio || new Date(q.created_at).toLocaleDateString()}</div>
                     </div>
+                    ${isPaid ? `<span class="badge bg-success" style="font-size: 8px;">IDENTIFICADO</span>` : ''}
                 </div>
-            `).join('');
+            `}).join('');
 
         } catch (e) { console.warn("Erro ao buscar orçamentos vinculados:", e); }
+    }
+
+    async function updateStatusManual(newStatus) {
+        const id = document.getElementById('task_id_hidden').value;
+        if (!id) return;
+
+        CRM.showLoader(true, "Atualizando status...");
+        try {
+            await Database.update('tarefas', id, { status: newStatus });
+            await loadTasks();
+            CRM.notify("Status atualizado!");
+        } catch (e) { alert(e.message); }
+        CRM.showLoader(false);
     }
 
     function setVal(id, val) {
@@ -439,6 +458,6 @@ const TaskModule = (function () {
     return {
         init, loadTasks, openModal, uploadDocs, addHistoryItem, addRequirement,
         removeDoc, removeHistoryItem, removeRequirement, save, deleteTask,
-        printDossier, checkLinkedQuotes
+        printDossier, checkLinkedQuotes, updateStatusManual
     };
 })();
